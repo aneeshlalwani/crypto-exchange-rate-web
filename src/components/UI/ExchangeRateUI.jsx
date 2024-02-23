@@ -1,6 +1,6 @@
 import { Typography, Card } from "antd";
 
-const ExchangeRateUI = () => {
+const ExchangeRateUI = (props) => {
   return (
     <>
       <div className="exchange-rate-ui">

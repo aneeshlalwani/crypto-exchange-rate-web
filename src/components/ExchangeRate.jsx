@@ -1,88 +1,88 @@
-import { Typography, Select } from "antd";
-import { cryptoCurrencies, fiatCurrencies } from "./currencies/currencies";
-import ExchangeRateUI from "./UI/ExchangeRateUI";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Typography, Select, Spin } from "antd";
+import { cryptoCurrencies, fiatCurrencies } from "./currencies/currencies.jsx";
+import ExchangeRateUI from "./UI/ExchangeRateUI.jsx";
 import { useQuery } from "react-query";
-import { fetchData } from "./fetchData/fetchData.jsx";
-import getExchangeRate from "./fetchData/fetchData";
+import getExchangeRate from "./fetchData/fetchData.jsx";
 
 const ExchangeRate = () => {
   const [fromCurrency, setFromCurrency] = useState(cryptoCurrencies[0].value);
   const [toCurrency, setToCurrency] = useState(fiatCurrencies[0].value);
+  const [currencySymbol, setCurrencySymbol] = useState("Bitcoin");
 
-  const dependencies = {
-    fromCurrency: fromCurrency,
-    toCurrency: toCurrency,
+  const handleFromCurrencyChange = (e) => {
+    setFromCurrency(e);
   };
-  /* Using useQuery hook to fetch the exchange rate data with specified parameters
-     The useQuery hook returns an object with many properties, but I have used those properties
-    that are of interest:
-        data: holds the fetched data.
-        isLoading: indicates if the data is still being fetched.
-        isError: indicates if an error occurred during fetching.
-        error: contains the error details if there's an issue. 
-*/
-  // destructuring object returned by hook
+
+  const handleToCurrencyChange = (e) => {
+    setToCurrency(e);
+  };
+
+  useEffect(() => {
+    const fromCurrencyLabel = cryptoCurrencies.find(
+      (currency) => currency.value === fromCurrency
+    )?.label;
+    setCurrencySymbol(fromCurrencyLabel);
+  }, [fromCurrency]);
+
+  const dependencies = { fromCurrency: fromCurrency, toCurrency: toCurrency };
   const { data, isLoading, isError, error } = useQuery({
-    // defining a unique identifier for the query
     queryKey: ["exchangeRate", dependencies],
-    /* fetchData function to retrieve the exchange rate between fromCurrency and toCurrency. */
-    queryFn: () => fetchData(fromCurrency, toCurrency),
-    //    This tells react-query to consider the data fresh for 1 minute after it's initially fetched.
+    queryFn: () => getExchangeRate(fromCurrency, toCurrency),
     staleTime: 1000 * 60,
     retry: 1,
-    retryDelay: 6000,
+    retryDelay: 60000,
   });
-  function handleFromCurrencyChange(e) {
-    setFromCurrency(e);
-    console.log(e);
-  }
-  function handleToCurrencyChange(e) {
-    setToCurrency(e);
-    console.log(e);
-  }
+  //   console.log(data);
   return (
-    <>
-      <section className="exchange-rate">
-        <Typography.Title style={{ color: "#4d4add" }} level={2}>
-          Exchange Rate
-        </Typography.Title>
-        <Typography.Text>
-          Get the latest exchange rate of cryptocurrencies in your favorite
-          currency
-        </Typography.Text>
-        <section
-          className="select-group"
-          style={{
-            display: "flex",
-            marginTop: "1rem",
-            gap: "1rem",
-            justifyContent: "space-around",
-          }}
-        >
-          <Select
-            defaultValue={cryptoCurrencies[0].value}
-            options={cryptoCurrencies}
-            onChange={() => handleFromCurrencyChange()}
-          />
-          <Select
-            defaultValue={fiatCurrencies[0].value}
-            options={fiatCurrencies}
-            onChange={() => handleToCurrencyChange()}
-          />
-        </section>
-        <section
-          style={{
-            marginTop: "5rem",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ExchangeRateUI />
-        </section>
+    <section className="exchange-rate">
+      <Typography.Title style={{ color: "#4d4add" }} level={2}>
+        Exchange Rate
+      </Typography.Title>
+      <Typography.Text>
+        Get the latest exchange rate of cryptocurrencies in your favorite
+        currency
+      </Typography.Text>
+      <section
+        className="select-group"
+        style={{
+          display: "flex",
+          marginTop: "1rem",
+          gap: "1rem",
+          justifyContent: "space-around",
+        }}
+      >
+        <Select
+          defaultValue={cryptoCurrencies[0].value}
+          options={cryptoCurrencies}
+          onChange={handleFromCurrencyChange}
+        />{" "}
+        <Select
+          defaultValue={fiatCurrencies[0].value}
+          options={fiatCurrencies}
+          onChange={handleToCurrencyChange}
+        />
       </section>
-    </>
+      <section style={{ marginTop: "1rem" }}>
+        {isLoading ? (
+          <Spin tip="Fetching results" spinning size="large" />
+        ) : isError ? (
+          <div>Error: {error.message}</div>
+        ) : !data || !data["Realtime Currency Exchange Rate"] ? (
+          <div>No data available</div>
+        ) : (
+          <div>
+            <ExchangeRateUI
+              price={
+                data["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
+              }
+              dataObj={dependencies}
+              currencySymbol={currencySymbol}
+            />
+          </div>
+        )}
+      </section>
+    </section>
   );
 };
 
