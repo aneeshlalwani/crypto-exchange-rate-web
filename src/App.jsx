@@ -1,5 +1,11 @@
+import ExchangeRateUI from "./components/UI/ExchangeRateUI";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <ExchangeRateUI />
+    </>
+  );
 }
 
 export default App;
