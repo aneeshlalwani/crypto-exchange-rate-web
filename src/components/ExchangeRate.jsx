@@ -1,7 +1,20 @@
 import { Typography, Select } from "antd";
 import { cryptoCurrencies, fiatCurrencies } from "./currencies/currencies";
 import ExchangeRateUI from "./UI/ExchangeRateUI";
+import { useState } from "react";
+
 const ExchangeRate = () => {
+  const [fromCurrency, setFromCurrency] = useState(cryptoCurrencies[0].value);
+  const [toCurrency, setToCurrency] = useState(fiatCurrencies[0].value);
+
+  function handleFromCurrencyChange(e) {
+    setFromCurrency(e);
+    console.log(e);
+  }
+  function handleToCurrencyChange(e) {
+    setToCurrency(e);
+    console.log(e);
+  }
   return (
     <>
       <section className="exchange-rate">
@@ -24,11 +37,13 @@ const ExchangeRate = () => {
           <Select
             defaultValue={cryptoCurrencies[0].value}
             options={cryptoCurrencies}
-          ></Select>
+            onChange={() => handleFromCurrencyChange()}
+          />
           <Select
             defaultValue={fiatCurrencies[0].value}
             options={fiatCurrencies}
-          ></Select>
+            onChange={() => handleToCurrencyChange()}
+          />
         </section>
         <section
           style={{
