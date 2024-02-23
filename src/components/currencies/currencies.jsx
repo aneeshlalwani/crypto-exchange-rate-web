@@ -1,4 +1,4 @@
-export const cryptocurrencies = [
+export const cryptoCurrencies = [
   { value: "BTC", label: "Bitcoin" },
   { value: "ETH", label: "Ethereum" },
   { value: "BCH", label: "Bitcoin Cash" },

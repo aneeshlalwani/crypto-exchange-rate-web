@@ -1,9 +1,9 @@
-import ExchangeRateUI from "./components/UI/ExchangeRateUI";
+import ExchangeRate from "./components/ExchangeRate";
 
 function App() {
   return (
     <>
-      <ExchangeRateUI />
+      <ExchangeRate />
     </>
   );
 }
