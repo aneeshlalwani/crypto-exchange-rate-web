@@ -47,7 +47,10 @@ const ExchangeRate = () => {
         </section>
         <section
           style={{
-            marginTop: "1rem",
+            marginTop: "5rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <ExchangeRateUI />
