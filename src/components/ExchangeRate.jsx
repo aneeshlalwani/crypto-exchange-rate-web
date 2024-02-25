@@ -36,10 +36,16 @@ const ExchangeRate = () => {
   //   console.log(data);
   return (
     <section className="exchange-rate">
-      <Typography.Title style={{ color: "#4d4add" }} level={2}>
+      <Typography.Title
+        className="title"
+        style={{
+          color: "#4d4add",
+        }}
+        level={2}
+      >
         Exchange Rate
       </Typography.Title>
-      <Typography.Text>
+      <Typography.Text className="title">
         Get the latest exchange rate of cryptocurrencies in your favorite
         currency
       </Typography.Text>
@@ -63,7 +69,14 @@ const ExchangeRate = () => {
           onChange={handleToCurrencyChange}
         />
       </section>
-      <section style={{ marginTop: "1rem" }}>
+      <section
+        style={{
+          marginTop: "5rem",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         {isLoading ? (
           <Spin tip="Fetching results" spinning size="large" />
         ) : isError ? (

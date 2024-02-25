@@ -1,0 +1,15 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-image: url("./assets/bg.png");
+}
+.title{
+    display: flex;
+    justify-content:center;
+    align-items: "center";
+    background: "rgba(0,0,0, 0.8)"
+}
